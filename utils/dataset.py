@@ -20,8 +20,9 @@ class DataSet(data.Dataset):
     def __init__(self, path = None):
         self.data_dir = path if path else image_dir
         self.data_files = [f for f in glob.glob(self.data_dir + "**/*.png", recursive=True) if not self._ignore_file(f)]
-        self.categories = self._get_categories()
+        self.categories = [f.split('-cat')[0] for f in os.listdir(self.data_dir) if not f.startswith('.') and all(f not in dir for dir in dirs_to_ignore)]
         self.images = []
+        self.cat_map = dict(zip(self.categories, range(0, len(self.categories))))
 
     def __getitem__(self, idx):
         return self.load_file(self.data_files[idx])
@@ -49,11 +50,19 @@ class DataSet(data.Dataset):
         return(counts)
 
     def load_all(self):
-        for i in tqdm(range(len(self.data_files))):
-            try:
-                self.images.append(self.load_file(self.data_files[i]))
-            except:
-                print('Error loading file: ' + self.data_files[i])
+        resized_img_dim = (512,512)
+
+        for cat_id in range(len(self.categories)):
+            category = self.categories[cat_id]
+            cat_files = [f for f in self.data_files if category in f]
+            for i in range(len(cat_files)):
+                try:
+                    #img = self.load_file(cat_files[i])
+                    img = read_image(cat_files[i])
+                    img_resized = cv2.resize(image, (512,512), interpolation=cv2.INTER_LINEAR)
+                    self.images.append(img_resized, cat_id)
+                except:
+                    print('Error loading file: ' + cat_files[i])
 
     def plot_samples(self, category):
         cat_files = [f for f in self.data_files if category in f]
