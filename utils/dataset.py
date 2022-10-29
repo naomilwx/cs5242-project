@@ -14,6 +14,7 @@ from torchvision.io import read_image
 image_dir = 'data/images/'
 dirs_to_ignore = ['ShopeePay-Near-Me', 'Miscellaneous']
 files_to_ignore = ['Automotive-cat\\9206333060.png', 'Men\'s-Bags-cat\\2391472522.png']
+resized_img_dim = (512,512)
 
 class DataSet(data.Dataset):
 
@@ -22,6 +23,7 @@ class DataSet(data.Dataset):
         self.data_files = [f for f in glob.glob(self.data_dir + "**/*.png", recursive=True) if not self._ignore_file(f)]
         self.categories = [f.split('-cat')[0] for f in os.listdir(self.data_dir) if not f.startswith('.') and all(f not in dir for dir in dirs_to_ignore)]
         self.images = []
+        self.labels = []
         self.cat_map = dict(zip(self.categories, range(0, len(self.categories))))
 
     def __getitem__(self, idx):
@@ -50,17 +52,21 @@ class DataSet(data.Dataset):
         return(counts)
 
     def load_all(self):
-        resized_img_dim = (512,512)
+        
 
         for cat_id in range(len(self.categories)):
             category = self.categories[cat_id]
             cat_files = [f for f in self.data_files if category in f]
-            for i in range(len(cat_files)):
+            for i in tqdm(range(len(cat_files))):
+
                 try:
+                    
                     #img = self.load_file(cat_files[i])
-                    img = read_image(cat_files[i])
-                    img_resized = cv2.resize(image, (512,512), interpolation=cv2.INTER_LINEAR)
-                    self.images.append(img_resized, cat_id)
+                    #img = read_image(cat_files[i])
+                    img = cv2.imread(cat_files[i])
+                    img_resized = cv2.resize(img, resized_img_dim, interpolation=cv2.INTER_LINEAR)
+                    self.images.append(img_resized)
+                    self.labels.append(cat_id)
                 except:
                     print('Error loading file: ' + cat_files[i])
 
