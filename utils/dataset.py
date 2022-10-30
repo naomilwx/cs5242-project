@@ -10,11 +10,14 @@ import matplotlib.pyplot as plt
 import torch
 from torch.utils import data
 from torchvision.io import read_image
+from torchvision import transforms, models, datasets
 
 image_dir = 'data/images/'
 dirs_to_ignore = ['ShopeePay-Near-Me', 'Miscellaneous']
 files_to_ignore = ['Automotive-cat\\9206333060.png', 'Men\'s-Bags-cat\\2391472522.png']
-resized_img_dim = (512,512)
+use_max_num_img = True
+max_num_img = 100
+all_img_dim = (224,224)
 
 class DataSet(data.Dataset):
 
@@ -57,15 +60,31 @@ class DataSet(data.Dataset):
         for cat_id in range(len(self.categories)):
             category = self.categories[cat_id]
             cat_files = [f for f in self.data_files if category in f]
-            for i in tqdm(range(len(cat_files))):
+            #if ~use_max_num_img:
+            #    max_num_img = len(cat_files)
+            if len(cat_files) ==0:
+                curr_max = 0
+            else:
+                curr_max = max_num_img
+            #for i in tqdm(range(len(cat_files))):
+            for i in tqdm(range(curr_max)):
 
                 try:
                     
                     #img = self.load_file(cat_files[i])
                     #img = read_image(cat_files[i])
+
                     img = cv2.imread(cat_files[i])
-                    img_resized = cv2.resize(img, resized_img_dim, interpolation=cv2.INTER_LINEAR)
-                    self.images.append(img_resized)
+                    img = cv2.resize(img, all_img_dim)
+                    #if img.shape != all_img_dim:
+                    #    print(img.shape)
+                    #    img = cv2.resize(img, all_img_dim, interpolation=cv2.INTER_LINEAR)
+                    img = img/255.
+                    img = torch.tensor(img).permute(2,0,1)
+                    #self.images.append(img)
+                    self.images.append(img.float())
+
+                    #self.images.append(self.preprocess_image(img/255.))
                     self.labels.append(cat_id)
                 except:
                     print('Error loading file: ' + cat_files[i])
@@ -83,3 +102,11 @@ class DataSet(data.Dataset):
             plt.axis('off')
         plt.tight_layout()
         plt.show()
+
+
+def preprocess_image(img):
+    img = torch.tensor(img).permute(2,0,1)
+    #normalize = transforms.Normalize(mean=[0.485, 0.456, 0.406],
+    #                            std=[0.229, 0.224, 0.225])
+    #img = normalize(img)
+    return img.float()
