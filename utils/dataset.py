@@ -75,19 +75,18 @@ class DataSet(data.Dataset):
                     #img = read_image(cat_files[i])
 
                     img = cv2.imread(cat_files[i])
-                    img = cv2.resize(img, all_img_dim)
+                    # img = cv2.resize(img, all_img_dim)
                     #if img.shape != all_img_dim:
                     #    print(img.shape)
                     #    img = cv2.resize(img, all_img_dim, interpolation=cv2.INTER_LINEAR)
-                    img = img/255.
-                    img = torch.tensor(img).permute(2,0,1)
-                    #self.images.append(img)
-                    self.images.append(img.float())
+                    # img = img/255.
+                    # img = torch.tensor(img).permute(2,0,1)
+                    # self.images.append(img.float())
 
-                    #self.images.append(self.preprocess_image(img/255.))
+                    self.images.append(self.preprocess_image(img))
                     self.labels.append(cat_id)
-                except:
-                    print('Error loading file: ' + cat_files[i])
+                except Exception as e:
+                    print('Error loading file: ' + cat_files[i], e)
 
     def plot_samples(self, category):
         cat_files = [f for f in self.data_files if category in f]
@@ -104,9 +103,16 @@ class DataSet(data.Dataset):
         plt.show()
 
 
-def preprocess_image(img):
-    img = torch.tensor(img).permute(2,0,1)
-    #normalize = transforms.Normalize(mean=[0.485, 0.456, 0.406],
-    #                            std=[0.229, 0.224, 0.225])
-    #img = normalize(img)
-    return img.float()
+    def preprocess_image(self, img):
+        transform = transforms.Compose([
+            transforms.ToPILImage(),
+            transforms.Resize(all_img_dim),
+            transforms.ToTensor(),
+            transforms.Normalize(
+                mean=[0.485, 0.456, 0.406],
+                std=[0.229, 0.224, 0.225],
+            ),
+        ])
+
+        img = transform(img)
+        return img
