@@ -14,7 +14,7 @@ from torchvision import transforms, models, datasets
 
 image_dir = 'data/images/'
 dirs_to_ignore = ['ShopeePay-Near-Me-cat', 'Miscellaneous-cat']
-files_to_ignore = ['Automotive-cat\\9206333060.png', 'Men\'s-Bags-cat\\2391472522.png']
+files_to_ignore = ['Automotive-cat\\9206333060.png', 'Men\'s-Bags-cat\\2391472522.png', 'Beauty-Personal-Care-cat\\157749.png', 'Beauty-Personal-Care-cat\\159257.png', 'Beauty-Personal-Care-cat\\2229429.png']
 use_max_num_img = True
 max_num_img = 100
 all_img_dim = (224,224)
