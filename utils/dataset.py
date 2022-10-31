@@ -10,11 +10,11 @@ import matplotlib.pyplot as plt
 
 import torch
 from torch.utils import data
-from torchvision.io import read_image
+from torchvision.io import read_image, ImageReadMode
 from torchvision import transforms, models, datasets
 
 image_dir = 'data/images/'
-dirs_to_ignore = ['ShopeePay-Near-Me-cat', 'Miscellaneous-cat']
+dirs_to_ignore = ['ShopeePay-Near-Me-cat', 'Miscellaneous-cat', 'Dining-Travel-Services-cat']
 files_to_ignore = ['Automotive-cat\\9206333060.png', 'Men\'s-Bags-cat\\2391472522.png', 'Beauty-Personal-Care-cat\\157749.png', 'Beauty-Personal-Care-cat\\159257.png', 'Beauty-Personal-Care-cat\\2229429.png']
 use_max_num_img = True
 # max_num_img = 100
@@ -57,8 +57,8 @@ class DataSet(data.Dataset):
     def _get_categories(self):
         return [f.split('-cat')[0] for f in os.listdir(self.data_dir) if not f.startswith('.') and all(f not in dir for dir in dirs_to_ignore)]
 
-    def load_file(self, file):
-        return read_image(file)
+    # def load_file(self, file):
+    #     return read_image(file, mode=ImageReadMode.RGB)
 
     def image_count_per_category(self):
         counts = {}
@@ -75,7 +75,7 @@ class DataSet(data.Dataset):
         if cat_id is None:
             cat = self.category_from_path(cat_file)
             cat_id = self.categories.index(cat)
-        img = read_image(cat_file)
+        img = read_image(cat_file, mode=ImageReadMode.RGB)
         self.images[cat_file] = self.preprocess_image(img)
         self.labels[cat_file] = cat_id
         return self.images[cat_file], self.labels[cat_file]
@@ -107,9 +107,6 @@ class DataSet(data.Dataset):
                     # img = torch.tensor(img).permute(2,0,1)
                     # self.images.append(img.float())
 
-                    # img = read_image(cat_files[i])
-                    # self.images[cat_files[i]] = self.preprocess_image(img)
-                    # self.labels[cat_files[i]] = cat_id
                     self.loaded_files.append(cat_files[i])
                     self.load_item_from_file(cat_files[i], cat_id=cat_id)
                 except Exception as e:
@@ -130,15 +127,16 @@ class DataSet(data.Dataset):
         plt.show()
 
 
-    def preprocess_image(self, img):
+    def preprocess_image(self, img, crop=0.75):
         transform = transforms.Compose([
             transforms.ToPILImage(),
             transforms.Resize(all_img_dim),
+            transforms.CenterCrop((int(crop*all_img_dim[0]), int(crop*all_img_dim[1]))),
             transforms.ToTensor(),
             transforms.Normalize(
                 mean=[0.485, 0.456, 0.406],
                 std=[0.229, 0.224, 0.225],
-            ),
+            )
         ])
 
         img = transform(img)
