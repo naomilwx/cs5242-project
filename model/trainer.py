@@ -12,6 +12,7 @@ class Trainer:
         self.seed = seed
         self._initialise_dataloaders(dataset, split)
         self.device = get_device()
+        self.model.to(self.device)
 
     def set_device(self, device):
         self.device = device
