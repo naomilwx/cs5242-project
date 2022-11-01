@@ -1,13 +1,7 @@
-from torch.utils.data import random_split, DataLoader
 import torch
+from torch.utils.data import random_split, DataLoader
 
-def get_device():
-    dev = 'cpu'
-    if torch.cuda.is_available():
-        dev = 'cuda:0'
-    elif torch.backends.mps.is_available():
-        dev = 'mps'
-    return torch.device(dev)
+from utils.device_utils import get_device
 
 class Trainer:
     def __init__(self, model, optimizer, criterion, dataset, batch_size, split=[0.7, 0.1, 0.2], seed=42):
