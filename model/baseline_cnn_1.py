@@ -28,7 +28,7 @@ class BaselineCNN1(nn.Module):
             nn.BatchNorm2d(128),
             nn.MaxPool2d(2, 2)
         )
-
+        
         self.aap = nn.AdaptiveAvgPool2d((1,1))
         self.flatten = nn.Flatten()
         self.classifier = nn.Linear(128, num_classes)
