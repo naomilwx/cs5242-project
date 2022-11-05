@@ -3,18 +3,19 @@ import torch.nn.functional as F
 from utils import device_utils
 
 class Block(nn.Module):
-    def __init__(self, in_channels, out_channels, stride=1):
+    def __init__(self, in_channels, out_channels):
         super(Block, self).__init__()
 
         self.skip = nn.Sequential(
-          nn.Conv2d(in_channels=in_channels, out_channels=out_channels, kernel_size=1, stride=stride, bias=False),
-          nn.BatchNorm2d(out_channels))
+          nn.Conv2d(in_channels=in_channels, out_channels=out_channels, kernel_size=1, stride=1),
+          nn.BatchNorm2d(out_channels)
+        )
 
         self.block = nn.Sequential(
-            nn.Conv2d(in_channels=in_channels, out_channels=out_channels, kernel_size=3, padding=1, stride=stride, bias=False),
+            nn.Conv2d(in_channels=in_channels, out_channels=out_channels, kernel_size=3, padding=1, stride=1),
             nn.BatchNorm2d(out_channels),
             nn.ReLU(),
-            nn.Conv2d(in_channels=out_channels, out_channels=out_channels, kernel_size=3, padding=1, stride=stride, bias=False),
+            nn.Conv2d(in_channels=out_channels, out_channels=out_channels, kernel_size=3, padding=1, stride=1),
           )
         
         self.bn = nn.BatchNorm2d(out_channels)
