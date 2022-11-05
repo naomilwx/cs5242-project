@@ -56,11 +56,12 @@ class Trainer:
             train_acc = correct/total
             print("[Epoch {:3d}]: Training loss: {:5f} | Accuracy: {:5f}".format(epoch, total_loss/(i+1), train_acc))
 
-            val_loss, val_acc = self.run_test(self.validloader)
-            print("[Epoch {:3d}]: Validation loss: {:5f} | Accuracy: {:5f}".format(epoch, val_loss, val_acc))
+            val_loss, val_acc, top_k = self.run_test(self.validloader)
+            print("[Epoch {:3d}]: Validation loss: {:5f} | Accuracy: {:5f} | Within 3: {:5f}".format(epoch, val_loss, val_acc, top_k))
 
-    def run_test(self, dataloader, with_stats=False):
+    def run_test(self, dataloader, k=3, with_stats=False):
         correct = 0
+        within_k = 0
         total = 0
         incorrect = {}
         avg_loss = 0
@@ -70,23 +71,25 @@ class Trainer:
                 num_batch += 1
                 images, labels = images.to(self.device), labels.to(self.device)
                 outputs = self.model(images)
-                _, predicted = torch.max(outputs.data, 1)
+                _, predicted = torch.topk(outputs.data, k, 1, largest=True, sorted=True)
+                
                 total += labels.size(0)
-                correct += (predicted == labels).sum().item()
+                correct += (predicted[:, 0] == labels).sum().item()
+                within_k += torch.eq(labels.unsqueeze(1), predicted).sum().item()
 
                 avg_loss += self.criterion(outputs, labels).item()
 
                 if with_stats:
-                    idxes = (predicted != labels).nonzero().flatten()
+                    idxes = (predicted[:, 0] != labels).nonzero().flatten()
                     for i in idxes:
-                        k = (labels[i].item(), predicted[i].item())
-                        if k in incorrect:
-                            incorrect[k]+=1
+                        key = (labels[i].item(), predicted[i][0].item())
+                        if key in incorrect:
+                            incorrect[key]+=1
                         else:
-                            incorrect[k] = 1
+                            incorrect[key] = 1
         avg_loss /= num_batch
         acc = correct/total
 
         if with_stats:
-            return avg_loss, acc, incorrect
-        return avg_loss, acc
+            return avg_loss, acc, within_k/total, incorrect
+        return avg_loss, acc, within_k/total
