@@ -16,10 +16,9 @@ class Block(nn.Module):
             nn.BatchNorm2d(out_channels),
             nn.ReLU(),
             nn.Conv2d(in_channels=out_channels, out_channels=out_channels, kernel_size=3, padding=1, stride=1),
-          )
+            nn.BatchNorm2d(out_channels)
+        )
         
-        self.bn = nn.BatchNorm2d(out_channels)
-
     def forward(self, x):
         skip = self.skip(x)
         
@@ -27,7 +26,6 @@ class Block(nn.Module):
         out += skip
 
         out = F.relu(out)
-        out = self.bn(out)
         return out
 
 class BaselineCNN2(nn.Module):
@@ -44,11 +42,13 @@ class BaselineCNN2(nn.Module):
             nn.MaxPool2d(kernel_size=2, stride=2),
             Block(64, 128),
             nn.MaxPool2d(kernel_size=2, stride=2),
+            Block(128, 256),
+            nn.MaxPool2d(kernel_size=2, stride=2),
         )
         
         self.aap = nn.AdaptiveAvgPool2d((1,1))
         self.flatten = nn.Flatten()
-        self.classifier = nn.Linear(128, num_classes)
+        self.classifier = nn.Linear(256, num_classes)
 
     
     def forward(self, x):
