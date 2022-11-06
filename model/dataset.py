@@ -14,7 +14,16 @@ from torchvision import transforms
 
 image_dir = 'data/images/'
 dirs_to_ignore = ['ShopeePay-Near-Me-cat', 'Miscellaneous-cat', 'Dining-Travel-Services-cat']
-files_to_ignore = ['Automotive-cat\\9206333060.png', 'Men\'s-Bags-cat\\2391472522.png', 'Beauty-Personal-Care-cat\\157749.png', 'Beauty-Personal-Care-cat\\159257.png', 'Beauty-Personal-Care-cat\\2229429.png']
+files_to_ignore = [
+    # Automotive-cat
+    '9206333060.png',
+    # Men\'s-Bags-cat
+    '2391472522.png',
+    # Beauty-Personal-Care-cat
+    '157749.png',
+    '159257.png',
+    '2229429.png'
+]
 use_max_num_img = True
 all_img_dim = (224,224)
 
@@ -46,9 +55,10 @@ class DataSet(data.Dataset):
         return len(self.loaded_files)
 
     def _ignore_file(self, file):
-        if any(dir in file for dir in dirs_to_ignore):
+        dir, filename = os.path.split(file)
+        if any(folder in dir for folder in dirs_to_ignore):
             return True
-        if any(file_ignore in file for file_ignore in files_to_ignore):
+        if any(filename == file_ignore for file_ignore in files_to_ignore):
             return True
         return False
 
@@ -105,8 +115,8 @@ class DataSet(data.Dataset):
                     # img = torch.tensor(img).permute(2,0,1)
                     # self.images.append(img.float())
 
-                    self.loaded_files.append(cat_files[i])
                     self.load_item_from_file(cat_files[i], cat_id=cat_id)
+                    self.loaded_files.append(cat_files[i])
                 except Exception as e:
                     print('Error loading file: ' + cat_files[i], e)
 
