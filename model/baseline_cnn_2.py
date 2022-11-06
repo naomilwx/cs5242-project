@@ -1,23 +1,26 @@
 import torch.nn as nn
 import torch.nn.functional as F
-from utils import device_utils
 
 class Block(nn.Module):
-    def __init__(self, in_channels, out_channels):
+    def __init__(self, in_channels, out_channels, depth=2):
         super(Block, self).__init__()
 
         self.skip = nn.Sequential(
           nn.Conv2d(in_channels=in_channels, out_channels=out_channels, kernel_size=1, stride=1),
           nn.BatchNorm2d(out_channels)
         )
-
-        self.block = nn.Sequential(
+        
+        blocks = [
             nn.Conv2d(in_channels=in_channels, out_channels=out_channels, kernel_size=3, padding=1, stride=1),
-            nn.BatchNorm2d(out_channels),
-            nn.ReLU(),
-            nn.Conv2d(in_channels=out_channels, out_channels=out_channels, kernel_size=3, padding=1, stride=1),
             nn.BatchNorm2d(out_channels)
-        )
+        ]
+        for i in range(1, depth):
+            blocks.extend([
+                nn.ReLU(),
+                nn.Conv2d(in_channels=out_channels, out_channels=out_channels, kernel_size=3, padding=1, stride=1),
+                nn.BatchNorm2d(out_channels)
+            ])
+        self.block = nn.Sequential(*blocks)
         
     def forward(self, x):
         skip = self.skip(x)
@@ -38,17 +41,17 @@ class BaselineCNN2(nn.Module):
             nn.MaxPool2d(kernel_size=2, stride=2),
             Block(16, 32),
             nn.MaxPool2d(kernel_size=2, stride=2),
-            Block(32, 64),
+            Block(32, 64, depth=3),
             nn.MaxPool2d(kernel_size=2, stride=2),
-            Block(64, 128),
-            nn.MaxPool2d(kernel_size=2, stride=2),
-            Block(128, 256),
-            nn.MaxPool2d(kernel_size=2, stride=2),
+            Block(64, 128, depth=3),
+            # nn.MaxPool2d(kernel_size=2, stride=2),
+            # Block(128, 256),
+            # nn.MaxPool2d(kernel_size=2, stride=2),
         )
         
         self.aap = nn.AdaptiveAvgPool2d((1,1))
         self.flatten = nn.Flatten()
-        self.classifier = nn.Linear(256, num_classes)
+        self.classifier = nn.Linear(128, num_classes)
 
     
     def forward(self, x):
