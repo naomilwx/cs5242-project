@@ -1,5 +1,6 @@
 import torch
 from torch.utils.data import random_split, DataLoader
+import copy
 
 from utils.device_utils import get_device
 
@@ -12,7 +13,7 @@ class Trainer:
         self.seed = seed
         self._initialise_dataloaders(dataset, split)
         self.device = get_device()
-        self.model.to(self.device)
+        self.best_model = None
 
     def set_device(self, device):
         self.device = device
@@ -29,6 +30,11 @@ class Trainer:
         self.testloader = DataLoader(test_dataset, shuffle=True, batch_size=self.batch_size)
 
     def run_train(self, num_epochs):
+        model = self.model.to(self.device)
+        model.train()
+
+        best_acc = None
+        best_epoch = None
         for epoch in range(num_epochs):
             running_loss = 0.0
             total_loss = 0.0
@@ -37,7 +43,7 @@ class Trainer:
             for i, (inputs, labels) in enumerate(self.trainloader, 0):
                 inputs, labels = inputs.to(self.device), labels.to(self.device)
                 self.optimizer.zero_grad()
-                y_pred = self.model.forward(inputs)
+                y_pred = model.forward(inputs)
                 loss = self.criterion(y_pred, labels)
                 loss.backward()
                 self.optimizer.step()
@@ -56,10 +62,21 @@ class Trainer:
             train_acc = correct/total
             print("[Epoch {:3d}]: Training loss: {:5f} | Accuracy: {:5f}".format(epoch, total_loss/(i+1), train_acc))
 
-            val_loss, val_acc, top_k = self.run_test(self.validloader)
+            val_loss, val_acc, top_k = self.run_test(self.validloader, model=model)
             print("[Epoch {:3d}]: Validation loss: {:5f} | Accuracy: {:5f} | Within 3: {:5f}".format(epoch, val_loss, val_acc, top_k))
+            model.train()
 
-    def run_test(self, dataloader, k=3, with_stats=False):
+            if best_acc is None or val_acc > best_acc:
+                best_acc = val_acc
+                self.best_model = copy.deepcopy(model).to(self.device)
+                best_epoch = epoch
+        print('Best epoch: ', best_epoch)
+
+    def run_test(self, dataloader, k=3, with_stats=False, model=None):
+        if model is None:
+            model = self.best_model if self.best_model is not None else self.model
+        model.eval()
+
         correct = 0
         within_k = 0
         total = 0
@@ -70,7 +87,7 @@ class Trainer:
             for images, labels in dataloader:
                 num_batch += 1
                 images, labels = images.to(self.device), labels.to(self.device)
-                outputs = self.model(images)
+                outputs = model(images)
                 _, predicted = torch.topk(outputs.data, k, 1, largest=True, sorted=True)
                 
                 total += labels.size(0)
