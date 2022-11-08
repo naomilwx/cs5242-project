@@ -29,7 +29,8 @@ all_img_dim = (224,224)
 
 class DataSet(data.Dataset):
 
-    def __init__(self, path = None, max_num_img=None):
+    def __init__(self, path = None, max_num_img=None, crop=0.75):
+        self.should_transform = False
         self.data_dir = path if path else image_dir
         self.all_data_files = [f for f in glob.glob(self.data_dir + "**/*.png", recursive=True) if not self._ignore_file(f)]
         self.categories = [f.split('-cat')[0] for f in os.listdir(self.data_dir) if not f.startswith('.') and all(f not in dir for dir in dirs_to_ignore)]
@@ -39,6 +40,7 @@ class DataSet(data.Dataset):
         self.cat_map = dict(zip(self.categories, range(0, len(self.categories))))
         if max_num_img:
             self.max_num_img = max_num_img
+        self.crop = crop
 
     def __getitem__(self, idx):
         if len(self.loaded_files) == 0:
@@ -104,17 +106,6 @@ class DataSet(data.Dataset):
 
             for i in tqdm(range(curr_max)):
                 try:
-                    
-                    #img = self.load_file(cat_files[i])
-                    # img = cv2.imread(cat_files[i])
-                    # img = cv2.resize(img, all_img_dim)
-                    #if img.shape != all_img_dim:
-                    #    print(img.shape)
-                    #    img = cv2.resize(img, all_img_dim, interpolation=cv2.INTER_LINEAR)
-                    # img = img/255.
-                    # img = torch.tensor(img).permute(2,0,1)
-                    # self.images.append(img.float())
-
                     self.load_item_from_file(cat_files[i], cat_id=cat_id)
                     self.loaded_files.append(cat_files[i])
                 except Exception as e:
@@ -134,12 +125,12 @@ class DataSet(data.Dataset):
         plt.tight_layout()
         plt.show()
 
-
-    def preprocess_image(self, img, crop=0.75):
+    def preprocess_image(self, img):
+        crop = self.crop
         transform = transforms.Compose([
             transforms.ToPILImage(),
+            transforms.CenterCrop((int(crop*img.shape[1]), int(crop*img.shape[2]))),
             transforms.Resize(all_img_dim),
-            transforms.CenterCrop((int(crop*all_img_dim[0]), int(crop*all_img_dim[1]))),
             transforms.ToTensor(),
             transforms.Normalize(
                 mean=[0.485, 0.456, 0.406],
