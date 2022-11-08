@@ -1,8 +1,9 @@
+import torch
 import torch.nn as nn
 
-class BaselineCNN1(nn.Module):
-    def __init__(self, num_classes):
-        super(BaselineCNN1, self).__init__()
+class BaselineCNN(nn.Module):
+    def __init__(self, num_classes, num_groups):
+        super(BaselineCNN, self).__init__()
         
         self.features = nn.Sequential(
             nn.Conv2d(3, 16, (3,3), 1, 1),
@@ -40,12 +41,15 @@ class BaselineCNN1(nn.Module):
         
         self.aap = nn.AdaptiveAvgPool2d((1,1))
         self.flatten = nn.Flatten()
-        self.classifier = nn.Linear(128, num_classes)
+
+        self.gclassifier = nn.Linear(128, num_groups)
+        self.classifier = nn.Linear(128+num_groups, num_classes)
 
     
     def forward(self, x):
         out = self.features(x)
-        out = self.aap(out)
-        out = self.flatten(out)
-        out = self.classifier(out)
-        return out
+        out = self.flatten(self.aap(out))
+
+        gout = self.gclassifier(out)
+        cout = self.classifier(torch.cat((out, gout), 1))
+        return gout, cout

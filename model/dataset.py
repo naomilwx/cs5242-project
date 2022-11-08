@@ -13,19 +13,8 @@ from torchvision.io import read_image, ImageReadMode
 from torchvision import transforms
 
 image_dir = 'data/images/'
-category_groups = {
-    'cars': ['Automotive'],
-    'bags': ["Men's-Bags", "Women's-Bags"],
-    'shoes': ["Men's-Shoes", "Women's-Shoes"],
-    'clothes': ["Women's-Apparel", "Men's-Wear", 'Kids-Fashion'],
-    'food': ['Pet-Food-Supplies', 'Food-Beverages'],
-    'accessories': ['Jewellery-Accessories', 'Watches'],
-    'electronics': ['Mobile-Gadgets', 'Computers-Peripherals', 'Cameras-Drones'],
-    'health': ['Beauty-Personal-Care', 'Health-Wellness'],
-    'hobbies': ['Video-Games', 'Travel-Luggage', 'Sports-Outdoors', 'Hobbies-Books'],
-    'toys': ['Toys-Kids-Babies'],
-    'home': ['Home-Living', 'Home-Appliances']
-}
+
+all_categories = ["Men's-Bags", 'Jewellery-Accessories', 'Automotive', "Men's-Shoes", 'Computers-Peripherals', 'Beauty-Personal-Care', 'Home-Appliances', 'Pet-Food-Supplies', 'Food-Beverages', "Women's-Apparel", 'Kids-Fashion', 'Video-Games', 'Mobile-Gadgets', 'Watches', 'Cameras-Drones', 'Travel-Luggage', 'Sports-Outdoors', 'Toys-Kids-Babies', 'Home-Living', 'Hobbies-Books', "Men's-Wear", 'Health-Wellness', "Women's-Bags", "Women's-Shoes"]
 categories_to_include = ["Men's-Bags", "Women's-Bags", "Women's-Apparel", "Men's-Wear", 'Kids-Fashion', "Men's-Shoes", "Women's-Shoes", 'Jewellery-Accessories', 'Watches']
 dirs_to_ignore = ['ShopeePay-Near-Me-cat', 'Miscellaneous-cat', 'Dining-Travel-Services-cat']
 files_to_ignore = [
@@ -40,19 +29,19 @@ files_to_ignore = [
     # Video-Games
     '14441529.png',
     '70096765.png',
-    '1996160760.png'
+    '1996160760.png',
+    # 'Toys-Kids-Babies'
+    '1150552610.png'
 ]
 use_max_num_img = True
 all_img_dim = (224,224)
 
 class DataSet(data.Dataset):
-
-    def __init__(self, path = None, max_num_img=None, crop=0.75):
-        self.should_transform = False
+    def __init__(self, path = None, max_num_img=None, crop=0.75, categories=categories_to_include):
         self.data_dir = path if path else image_dir
+        self.categories = categories
         self.all_data_files = [f for f in glob.glob(self.data_dir + "**/*.png", recursive=True) if not self._ignore_file(f)]
         # self.categories = [f.split('-cat')[0] for f in os.listdir(self.data_dir) if not f.startswith('.') and all(f not in dir for dir in dirs_to_ignore)]
-        self.categories = categories_to_include
         self.images = {}
         self.labels = {}
         self.loaded_files = []
@@ -79,13 +68,13 @@ class DataSet(data.Dataset):
         dir, filename = os.path.split(file)
         # if any(folder in dir for folder in dirs_to_ignore):
         #     return True
-        included_cat = any(cat in dir for cat in categories_to_include)
+        included_cat = any(cat in dir for cat in self.categories)
         if any(filename == file_ignore for file_ignore in files_to_ignore):
             return True
         return not included_cat
 
-    def _get_categories(self):
-        return [f.split('-cat')[0] for f in os.listdir(self.data_dir) if not f.startswith('.') and all(f not in dir for dir in dirs_to_ignore)]
+    # def _get_categories(self):
+    #     return [f.split('-cat')[0] for f in os.listdir(self.data_dir) if not f.startswith('.') and all(f not in dir for dir in dirs_to_ignore)]
 
     # def load_file(self, file):
     #     return read_image(file, mode=ImageReadMode.RGB)
