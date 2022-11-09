@@ -1,6 +1,5 @@
 import os
 import glob
-from unicodedata import category
 import pandas as pd
 import numpy as np
 

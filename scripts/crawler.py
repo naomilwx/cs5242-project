@@ -44,6 +44,26 @@ def download_images(dir):
                 save_image_from_url(p["product_image"], save_path)
             time.sleep(1)
 
+def product_category_and_names(dir):
+    categories = {}
+    product_names = {}
+    for fn in os.listdir(dir):
+        if fn[0] == '.':
+            continue
+        fp = os.path.join(dir, fn)
+        if not os.path.isfile(fp):
+            continue
+        
+        category = fn.split('-cat')[0]
+        with open(fp, 'r') as f:
+            categories[category] = []
+            data = json.load(f)
+            for p in data:
+                pid = p['product_id']
+                categories[category].append(pid)
+                product_names[str(pid)] = p['product_name']
+
+    return categories, product_names
 
 # if __name__ == '__main__':
 #     for c in category_urls:
