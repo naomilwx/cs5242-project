@@ -8,7 +8,8 @@ from tqdm import tqdm
 import matplotlib.pyplot as plt
 
 from torch.utils import data
-from torchvision.io import read_image, ImageReadMode
+from torchvision.io import read_image
+from torchvision.io.image import ImageReadMode
 from torchvision import transforms
 
 image_dir = 'data/images/'
