@@ -7,7 +7,7 @@ import cv2
 from tqdm import tqdm
 import matplotlib.pyplot as plt
 
-from PIL import Image
+import PIL
 
 from torch.utils import data
 from torchvision.io import read_image
@@ -96,8 +96,9 @@ class DataSet(data.Dataset):
         if cat_id is None:
             cat = self.category_from_path(cat_file)
             cat_id = self.categories.index(cat)
-        # img = Image.open(cat_file)
-        img = read_image(cat_file, mode=ImageReadMode.RGB)
+        img = Image.open(cat_file)
+        img = transforms.functional.to_tensor(img)
+        # img = read_image(cat_file, mode=ImageReadMode.RGB)
         self.images[cat_file] = self.preprocess_image(img)
         self.labels[cat_file] = cat_id
         return self.images[cat_file], self.labels[cat_file]
