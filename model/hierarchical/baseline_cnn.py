@@ -53,3 +53,4 @@ class BaselineCNN(nn.Module):
         gout = self.gclassifier(out)
         cout = self.classifier(torch.cat((out, gout), 1))
         return gout, cout
+        
