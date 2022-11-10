@@ -30,7 +30,10 @@ files_to_ignore = [
     '70096765.png',
     '1996160760.png',
     # 'Toys-Kids-Babies'
-    '1150552610.png'
+    '1150552610.png',
+    # 'Jewellery-Accessories'
+    '15850703277.png'
+    '15913492050.png'
 ]
 use_max_num_img = True
 all_img_dim = (224,224)

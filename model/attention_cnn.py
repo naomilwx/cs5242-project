@@ -43,7 +43,7 @@ class CNNWithAttention(nn.Module):
             nn.Conv2d(128, 128, (3,3), 1, 1),
             nn.ReLU(True),
             nn.BatchNorm2d(128),
-            # nn.MaxPool2d(2, 2),
+            nn.MaxPool2d(2, 2)
         )
 
         self.attn = SpatialAttention(128)
