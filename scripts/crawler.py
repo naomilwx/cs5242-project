@@ -50,6 +50,8 @@ def product_category_and_names(dir):
     for fn in os.listdir(dir):
         if fn[0] == '.':
             continue
+        if not 'json' in fn:
+            continue
         fp = os.path.join(dir, fn)
         if not os.path.isfile(fp):
             continue

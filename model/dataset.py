@@ -15,6 +15,8 @@ image_dir = 'data/images/'
 
 all_categories = ["Men's-Bags", 'Jewellery-Accessories', 'Automotive', "Men's-Shoes", 'Computers-Peripherals', 'Beauty-Personal-Care', 'Home-Appliances', 'Pet-Food-Supplies', 'Food-Beverages', "Women's-Apparel", 'Kids-Fashion', 'Video-Games', 'Mobile-Gadgets', 'Watches', 'Cameras-Drones', 'Travel-Luggage', 'Sports-Outdoors', 'Toys-Kids-Babies', 'Home-Living', 'Hobbies-Books', "Men's-Wear", 'Health-Wellness', "Women's-Bags", "Women's-Shoes"]
 categories_to_include = ["Men's-Bags", "Women's-Bags", "Women's-Apparel", "Men's-Wear", 'Kids-Fashion', "Men's-Shoes", "Women's-Shoes", 'Jewellery-Accessories', 'Watches']
+# distinct_categories = ['Automotive', "Men's-Bags", "Women's-Apparel", "Men's-Shoes",'Food-Beverages','Jewellery-Accessories', 'Computers-Peripherals', 'Travel-Luggage', 'Home-Living']
+distinct_categories = ["Women's-Bags", "Men's-Shoes", 'Kids-Fashion', 'Food-Beverages', 'Watches', 'Sports-Outdoors', 'Cameras-Drones', 'Home-Appliances', 'Hobbies-Books']
 dirs_to_ignore = ['ShopeePay-Near-Me-cat', 'Miscellaneous-cat', 'Dining-Travel-Services-cat']
 files_to_ignore = [
     # Automotive-cat
