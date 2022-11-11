@@ -1,8 +1,11 @@
-import matplotlib.pyplot as plt
 import keras_ocr
 import cv2
 import math
 import numpy as np
+import imagehash
+from PIL import Image
+import os
+
 def midpoint(x1, y1, x2, y2):
     x_mid = int((x1 + x2)/2)
     y_mid = int((y1 + y2)/2)
@@ -40,3 +43,22 @@ def crop_and_inpaint_text(img_path, pipeline, crop_scale=0.8):
                  
     return(img)
 
+def get_similar_images(dir):
+    imghashes = {}
+   
+    for fn in os.listdir(dir):
+        if fn[0] == '.':
+            continue
+        fp = os.path.join(dir, fn)
+        if not os.path.isfile(fp):
+            continue
+        curr_hash =imagehash.average_hash(Image.open(fp))
+        if curr_hash not in imghashes:
+            imghashes[curr_hash] = []
+        imghashes[curr_hash].append(fp)
+    print(len(imghashes))
+    similar_imgs = []
+    for _, imgs in imghashes.items():
+        if len(imgs) > 1:
+            similar_imgs.append(imgs)
+    return similar_imgs
