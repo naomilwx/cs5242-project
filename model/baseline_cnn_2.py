@@ -44,14 +44,14 @@ class BaselineCNN2(nn.Module):
             Block(32, 64, depth=3),
             nn.MaxPool2d(kernel_size=2, stride=2),
             Block(64, 128, depth=3),
-            # nn.MaxPool2d(kernel_size=2, stride=2),
-            # Block(128, 256),
-            # nn.MaxPool2d(kernel_size=2, stride=2),
+            nn.MaxPool2d(kernel_size=2, stride=2),
+            Block(128, 256),
+            nn.MaxPool2d(kernel_size=2, stride=2),
         )
         
         self.aap = nn.AdaptiveAvgPool2d((1,1))
         self.flatten = nn.Flatten()
-        self.classifier = nn.Linear(128, num_classes)
+        self.classifier = nn.Linear(256, num_classes)
 
     
     def forward(self, x):

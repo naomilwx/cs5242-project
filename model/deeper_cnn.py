@@ -82,6 +82,7 @@ class DeeperCNN(nn.Module):
             nn.Conv2d(256, 256, (3,3), 1, 1),
             nn.ReLU(True),
             nn.BatchNorm2d(256),
+            nn.MaxPool2d(2, 2),
         )
 
         self.aap = nn.AdaptiveAvgPool2d((1,1))
