@@ -1,4 +1,4 @@
-import keras_ocr
+# import keras_ocr
 import cv2
 import math
 import numpy as np
@@ -56,9 +56,51 @@ def get_similar_images(dir):
         if curr_hash not in imghashes:
             imghashes[curr_hash] = []
         imghashes[curr_hash].append(fp)
-    print(len(imghashes))
+
     similar_imgs = []
     for _, imgs in imghashes.items():
         if len(imgs) > 1:
             similar_imgs.append(imgs)
     return similar_imgs
+
+def get_duplicate_images(dir):
+    imghashes = {}
+   
+    for fn in os.listdir(dir):
+        if fn[0] == '.':
+            continue
+        fp = os.path.join(dir, fn)
+        if not os.path.isfile(fp):
+            continue
+        curr_hash =imagehash.average_hash(Image.open(fp))
+        if curr_hash not in imghashes:
+            imghashes[curr_hash] = []
+        imghashes[curr_hash].append(fp)
+
+    dup_images = []
+    for _, imgs in imghashes.items():
+        if len(imgs) > 1:
+            dups = get_duplicate_pairs(imgs)
+            if len(dups) > 0:
+                dup_images.append(dups)
+        
+    return dup_images
+
+def are_images_the_same(imgpath1, imgpath2):
+    img1 = cv2.imread(imgpath1, cv2.IMREAD_COLOR)
+    img2 = cv2.imread(imgpath2, cv2.IMREAD_COLOR)
+    if img1.shape != img2.shape:
+        print(img1.shape, img2.shape)
+        return False
+    difference = cv2.subtract(img1, img2)
+    b, g, r = cv2.split(difference)
+    return cv2.countNonZero(b) == 0 and cv2.countNonZero(g) == 0 and cv2.countNonZero(r) == 0
+
+def get_duplicate_pairs(images):
+    dups = []
+    for i in range(len(images)):
+        for j in range(i+2, len(images)):
+            if are_images_the_same(images[i], images[j]):
+                dups.append((images[i], images[j]))
+
+    return dups
