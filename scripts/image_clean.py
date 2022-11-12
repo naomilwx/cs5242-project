@@ -109,3 +109,16 @@ def get_duplicate_pairs(images):
                 dups.append((images[i], images[j]))
 
     return dups
+
+def remove_background(data_dir, out_dir, target_folders):
+    for folder in target_folders:
+        if folder.startswith('.'):
+            continue
+        out_path = os.path.join(out_dir, folder)
+    
+        if not os.path.exists(out_path):
+            os.makedirs(out_path)
+        
+        print('processing', folder)
+        cmd = f"rembg p \"{os.path.join(data_dir, folder)}\" \"{out_path}\""
+        os.system(cmd)
