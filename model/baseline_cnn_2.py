@@ -37,21 +37,21 @@ class BaselineCNN2(nn.Module):
         super(BaselineCNN2, self).__init__()
 
         self.features = nn.Sequential(
-            Block(3, 16),
+            Block(3, 16, depth=3),
             nn.MaxPool2d(kernel_size=2, stride=2),
-            Block(16, 32),
+            Block(16, 32, depth=3),
             nn.MaxPool2d(kernel_size=2, stride=2),
-            Block(32, 64, depth=3),
+            Block(32, 64, depth=5),
             nn.MaxPool2d(kernel_size=2, stride=2),
-            Block(64, 128, depth=3),
+            Block(64, 128, depth=5),
             nn.MaxPool2d(kernel_size=2, stride=2),
-            Block(128, 256),
-            nn.MaxPool2d(kernel_size=2, stride=2),
+            # Block(128, 256),
+            # nn.MaxPool2d(kernel_size=2, stride=2),
         )
         
         self.aap = nn.AdaptiveAvgPool2d((1,1))
         self.flatten = nn.Flatten()
-        self.classifier = nn.Linear(256, num_classes)
+        self.classifier = nn.Linear(128, num_classes)
 
     
     def forward(self, x):
