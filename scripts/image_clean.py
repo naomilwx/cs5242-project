@@ -1,10 +1,16 @@
-import keras_ocr
 import cv2
 import math
 import numpy as np
 import imagehash
 from PIL import Image
 import os
+
+try:
+    import keras_ocr
+except ImportError as e:
+    print('keras-ocr not installed')
+except Exception as e:
+    print(e)
 
 def midpoint(x1, y1, x2, y2):
     x_mid = int((x1 + x2)/2)
