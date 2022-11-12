@@ -1,4 +1,4 @@
-# import keras_ocr
+import keras_ocr
 import cv2
 import math
 import numpy as np
@@ -90,7 +90,6 @@ def are_images_the_same(imgpath1, imgpath2):
     img1 = cv2.imread(imgpath1, cv2.IMREAD_COLOR)
     img2 = cv2.imread(imgpath2, cv2.IMREAD_COLOR)
     if img1.shape != img2.shape:
-        print(img1.shape, img2.shape)
         return False
     difference = cv2.subtract(img1, img2)
     b, g, r = cv2.split(difference)
