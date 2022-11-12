@@ -1,4 +1,3 @@
-import torch
 import torch.nn as nn
 
 class ConvBlock(nn.Module):
@@ -75,16 +74,16 @@ class DeeperCNN(nn.Module):
 
 class DeeperCNN2(nn.Module):
     def __init__(self, num_classes):
-        super(DeeperCNN, self).__init__()
+        super(DeeperCNN2, self).__init__()
         
         self.features = nn.Sequential(
-            ConvBlock(3, 16, depth=3),
+            ConvBlock2(3, 16),
             nn.MaxPool2d(kernel_size=2, stride=2),
-            ConvBlock(16, 32, depth=3),
+            ConvBlock2(16, 32),
             nn.MaxPool2d(kernel_size=2, stride=2),
-            ConvBlock(32, 64, depth=5),
+            ConvBlock2(32, 64, depth=4),
             nn.MaxPool2d(kernel_size=2, stride=2),
-            ConvBlock(64, 128, depth=5),
+            ConvBlock2(64, 128, depth=4),
             nn.MaxPool2d(kernel_size=2, stride=2),
         )
 

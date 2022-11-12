@@ -1,7 +1,7 @@
 import torch
 import torch.nn as nn
 
-from model.attention import SpatialAttention, AttentionConv2d, ProjectorBlock
+from model.attention import SpatialAttention, AttentionConv2d, ProjectorBlock, AttentionConv
 
 class CNNWithAttention(nn.Module):
     def __init__(self, num_classes):
@@ -69,12 +69,18 @@ class CNNWithConvAttention(nn.Module):
             nn.Conv2d(3, 16, (3,3), 1, 1),
             nn.ReLU(True),
             nn.BatchNorm2d(16),
+            AttentionConv(16, 16, 3, 1, 1),
+            nn.ReLU(True),
+            nn.BatchNorm2d(16),
             nn.Conv2d(16, 16, (3,3), 1, 1),
             nn.ReLU(True),
             nn.BatchNorm2d(16),
             nn.MaxPool2d(2, 2), #112X112
 
             nn.Conv2d(16, 32, (3,3), 1, 1),
+            nn.ReLU(True),
+            nn.BatchNorm2d(32),
+            AttentionConv(32, 32, 3, 1, 1),
             nn.ReLU(True),
             nn.BatchNorm2d(32),
             nn.Conv2d(32, 32, (3,3), 1, 1),
@@ -85,17 +91,24 @@ class CNNWithConvAttention(nn.Module):
             nn.Conv2d(32, 64, (3,3), 1, 1),
             nn.ReLU(True),
             nn.BatchNorm2d(64),
+            AttentionConv(64, 64, 3, 1, 1),
+            nn.ReLU(True),
+            nn.BatchNorm2d(64),
             nn.Conv2d(64, 64, (3,3), 1, 1),
             nn.ReLU(True),
             nn.BatchNorm2d(64),
             nn.MaxPool2d(2, 2), # 28X28
 
-            AttentionConv2d(64, 128, 3, 128, 8, 4),
+            nn.Conv2d(64, 128, (3,3), 1, 1),
             nn.ReLU(True),
             nn.BatchNorm2d(128),
-            AttentionConv2d(128, 128, 3, 128, 8, 4),
+            AttentionConv(128, 128, 3, 1, 1),
             nn.ReLU(True),
             nn.BatchNorm2d(128),
+            nn.Conv2d(128, 128, 3, 1, 1),
+            nn.ReLU(True),
+            nn.BatchNorm2d(128),
+            nn.MaxPool2d(2, 2), # 28X28,
         )
 
         self.aap = nn.AdaptiveAvgPool2d((1,1))
