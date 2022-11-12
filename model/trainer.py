@@ -46,7 +46,6 @@ class Trainer:
 
         best_acc = None
         best_epoch = None
-        
         for epoch in range(num_epochs):
             running_loss = 0.0
             total_loss = 0.0

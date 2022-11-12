@@ -98,9 +98,9 @@ class DataSet(data.Dataset):
         if cat_id is None:
             cat = self.category_from_path(cat_file)
             cat_id = self.categories.index(cat)
-        img = PIL.Image.open(cat_file)
-        img = transforms.functional.to_tensor(img)
-        # img = read_image(cat_file, mode=ImageReadMode.RGB)
+        # img = PIL.Image.open(cat_file).convert('RGB')
+        # img = transforms.functional.to_tensor(img)
+        img = read_image(cat_file, mode=ImageReadMode.RGB)
         self.images[cat_file] = self.preprocess_image(img)
         self.labels[cat_file] = cat_id
         return self.images[cat_file], self.labels[cat_file]

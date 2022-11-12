@@ -1,6 +1,7 @@
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
+from utils.device_utils import get_device
 
 class RNN(nn.Module):
 
@@ -10,13 +11,17 @@ class RNN(nn.Module):
         super(RNN, self).__init__()
         self.input_size = input_size
         self.patch_size = 2
-        self.rnn = nn.LSTM(self.patch_size**2, self.patch_size**2, 2, batch_first=True)
+        device = get_device()
+        self.rnn = nn.LSTM(self.patch_size**2, self.patch_size**2, 2, batch_first=True).to(device)
 
     def forward(self, x):
         # Convert into patches
         num_patches = x.shape[-1] // self.patch_size
         x = x.unfold(2, self.patch_size, self.patch_size).unfold(3, self.patch_size, self.patch_size)
-        x = x.contiguous().view(x.size(0), -1, self.patch_size**2)
+        print(x.shape)
+        x = x.reshape(x.shape[0], -1, self.patch_size**2)
+        # x = x.contiguous().view(x.size(0), -1, self.patch_size**2)
+        print(x.shape)
         out, _ = self.rnn(x)
         out = out.contiguous().view(x.size(0), self.input_size, num_patches*self.patch_size, num_patches*self.patch_size)
         return out  
