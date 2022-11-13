@@ -42,7 +42,7 @@ class CNNWithAttention(nn.Module):
             nn.BatchNorm2d(128)
         )
      
-        self.attn1 = AttentionBlock(32, 128, 64, 4, normalize_attn=True)
+        self.attn1 = AttentionBlock(32, 128, 32, 4, normalize_attn=True)
         self.attn2 = AttentionBlock(64, 128, 64, 2, normalize_attn=True)
 
         self.pool = nn.Sequential(

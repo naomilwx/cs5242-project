@@ -37,12 +37,11 @@ files_to_ignore = [
     '15850703277.png'
     '15913492050.png'
 ]
-use_max_num_img = True
 all_img_dim = (224,224)
 
 class DataSet(data.Dataset):
-    def __init__(self, path = None, max_num_img=None, crop=0.75, categories=categories_to_include):
-        self.data_dir = path if path else image_dir
+    def __init__(self, path = image_dir, max_num_img=None, crop=0.9, categories=categories_to_include):
+        self.data_dir = path
         self.categories = categories
         self.all_data_files = [f for f in glob.glob(self.data_dir + "**/*.png", recursive=True) if not self._ignore_file(f)]
         # self.categories = [f.split('-cat')[0] for f in os.listdir(self.data_dir) if not f.startswith('.') and all(f not in dir for dir in dirs_to_ignore)]
@@ -50,8 +49,7 @@ class DataSet(data.Dataset):
         self.labels = {}
         self.loaded_files = []
         self.cat_map = dict(zip(self.categories, range(0, len(self.categories))))
-        if max_num_img:
-            self.max_num_img = max_num_img
+        self.max_num_img = max_num_img
         self.crop = crop
 
     def __getitem__(self, idx):

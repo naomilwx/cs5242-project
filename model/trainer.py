@@ -6,7 +6,7 @@ from torchvision import transforms
 from utils.device_utils import get_device
 
 class Trainer:
-    def __init__(self, model, optimizer, criterion, dataset, batch_size, split=[0.7, 0.1, 0.2], seed=42):
+    def __init__(self, model, optimizer, criterion, dataset, batch_size, split=[0.7, 0.1, 0.2], seed=42, crop=0.9, random_transform=True):
         self.model = model
         self.optimizer = optimizer
         self.criterion = criterion
@@ -15,6 +15,8 @@ class Trainer:
         self._initialise_dataloaders(dataset, split)
         self.device = get_device()
         self.best_model = None
+        self.crop = crop
+        self.should_transform=random_transform
 
     def set_device(self, device):
         self.device = device
@@ -29,16 +31,16 @@ class Trainer:
         self.validloader = DataLoader(valid_dataset, shuffle=True, batch_size=self.batch_size)
         self.testloader = DataLoader(test_dataset, shuffle=True, batch_size=self.batch_size)
 
-    def training_transform(self, img, crop=0.8):
+    def training_transform(self, img):
         img_size = img.shape[-1]
         transform = transforms.Compose([
-            transforms.RandomCrop(int(crop*img_size)),
+            transforms.RandomCrop(int(self.crop*img_size)),
             transforms.Resize(img_size),
+            transforms.RandomRotation(10),
             transforms.RandomHorizontalFlip()
         ])
 
-        img = transform(img)
-        return img
+        return transform(img)
 
     def run_train(self, num_epochs):
         model = self.model.to(self.device)
@@ -53,7 +55,8 @@ class Trainer:
             total = 0
             correct = 0
             for i, (inputs, labels) in enumerate(self.trainloader, 0):
-                # inputs = self.training_transform(inputs)
+                if self.should_transform:
+                    inputs = self.training_transform(inputs)
                 inputs, labels = inputs.to(self.device), labels.to(self.device)
                 self.optimizer.zero_grad()
                 y_pred = model(inputs)
