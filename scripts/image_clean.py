@@ -88,7 +88,7 @@ def get_duplicate_images(dir):
         if len(imgs) > 1:
             dups = get_duplicate_pairs(imgs)
             if len(dups) > 0:
-                dup_images.append(dups)
+                dup_images.extend(dups)
         
     return dup_images
 
