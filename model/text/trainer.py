@@ -2,6 +2,7 @@ import torch
 from torch.utils.data import random_split, DataLoader
 from torchtext.data.utils import get_tokenizer
 from torchtext.vocab import build_vocab_from_iterator
+from torchvision import transforms
 
 import copy
 from utils.device_utils import get_device
@@ -53,7 +54,7 @@ class DataStore:
         return collate_batch
 
 class Trainer:
-    def __init__(self, model, optimizer, criterion, batch_size, data):
+    def __init__(self, model, optimizer, criterion, batch_size, data, crop=0.9, random_transform=True):
         self.device = get_device()
 
         self.model = model
@@ -63,8 +64,22 @@ class Trainer:
         self.batch_size = batch_size
         self.data = data
 
+        self.crop = crop
+        self.should_transform = random_transform
+
     def set_device(self, device):
         self.device = device
+
+    def training_transform(self, img):
+        img_size = img.shape[-1]
+        transform = transforms.Compose([
+            transforms.RandomCrop(int(self.crop*img_size)),
+            transforms.Resize(img_size),
+            transforms.RandomRotation(10),
+            transforms.RandomHorizontalFlip()
+        ])
+
+        return transform(img)
 
     def run_train(self, num_epochs):
         model = self.model.to(self.device)
@@ -79,6 +94,8 @@ class Trainer:
             total = 0
             correct = 0
             for i, (inputs, titles, labels, offsets) in enumerate(self.data.trainloader, 0):
+                if self.should_transform:
+                    inputs = self.training_transform(inputs)
                 inputs, labels = inputs.to(self.device), labels.to(self.device)
                 titles, offsets = titles.to(self.device), offsets.to(self.device)
 
