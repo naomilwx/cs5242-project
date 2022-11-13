@@ -34,10 +34,10 @@ class Block(nn.Module):
 
         return out + identity
 
-class BaselineCNN2(nn.Module):
+class ResidualCNN(nn.Module):
 
     def __init__(self, num_classes):
-        super(BaselineCNN2, self).__init__()
+        super(ResidualCNN, self).__init__()
 
         self.features = nn.Sequential(
             Block(3, 16),
@@ -57,6 +57,37 @@ class BaselineCNN2(nn.Module):
         self.classifier = nn.Linear(128, num_classes)
 
     
+    def forward(self, x):
+        out = self.features(x)
+        out = self.aap(out)
+        out = self.flatten(out)
+        out = self.classifier(out)
+        return out
+
+class DeeperResidualCNN(nn.Module):
+    def __init__(self, num_classes):
+        super(DeeperResidualCNN, self).__init__()
+
+        self.features = nn.Sequential(
+            Block(3, 16),
+            nn.MaxPool2d(kernel_size=2, stride=2),
+            Block(16, 32),
+            nn.MaxPool2d(kernel_size=2, stride=2),
+            Block(32, 64),
+            Block(64, 64),
+            nn.MaxPool2d(kernel_size=2, stride=2),
+            Block(64, 128),
+            Block(128, 128),
+            nn.MaxPool2d(kernel_size=2, stride=2),
+            Block(128, 256),
+            Block(256, 256),
+            nn.MaxPool2d(kernel_size=2, stride=2)
+        )
+        
+        self.aap = nn.AdaptiveAvgPool2d((1,1))
+        self.flatten = nn.Flatten()
+        self.classifier = nn.Linear(256, num_classes)
+
     def forward(self, x):
         out = self.features(x)
         out = self.aap(out)
