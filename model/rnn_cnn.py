@@ -63,7 +63,7 @@ class CNNWithRNN(nn.Module):
         self.rnn = RNN(128)
 
         self.aap = nn.AdaptiveAvgPool2d((1,1))
-        self.classifier = nn.Linear(128, num_classes)
+        self.classifier = nn.Linear(25088, num_classes)
 
     
     def forward(self, x):
