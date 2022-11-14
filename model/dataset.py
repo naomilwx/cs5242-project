@@ -151,3 +151,14 @@ class DataSet(data.Dataset):
 
         img = transform(img)
         return img
+
+def display_preprocessed_image(img):
+    plt.figure()
+    transform = transforms.Compose([
+        transforms.Normalize(
+            mean=[-0.485/0.229, -0.456/0.224, -0.406/0.225],
+            std=[1/0.229, 1/0.224, 1/0.225]
+        ),
+        transforms.ToPILImage(),
+    ])
+    plt.imshow(transform(img))

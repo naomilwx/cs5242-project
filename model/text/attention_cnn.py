@@ -32,8 +32,8 @@ class CNNWithAttention(nn.Module):
             nn.BatchNorm2d(64),
         )
         self.features3 = nn.Sequential(
-            nn.MaxPool2d(2, 2),
-            nn.Conv2d(64, 128, (3,3), 1, 1), #28x28
+            nn.MaxPool2d(2, 2), #28x28
+            nn.Conv2d(64, 128, (3,3), 1, 1), 
             nn.ReLU(True),
             nn.BatchNorm2d(128),
             nn.Conv2d(128, 128, (3,3), 1, 1),

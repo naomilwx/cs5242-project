@@ -1,4 +1,5 @@
 import torch
+import torch.nn.functional as F
 from torch.utils.data import random_split, DataLoader
 import copy
 from torchvision import transforms
@@ -126,3 +127,20 @@ class Trainer:
         if with_stats:
             return avg_loss, acc, within_k/total, incorrect
         return avg_loss, acc, within_k/total
+
+    def images_with_max_loss(self, dataloader, model=None, k=10):
+        if model is None:
+            model = self.best_model if self.best_model is not None else self.model
+        model.eval()
+        top_losses = []
+        with torch.no_grad():
+            for images, labels in dataloader:
+                images, labels = images.to(self.device), labels.to(self.device)
+                outputs = model(images)
+
+                losses = F.cross_entropy(outputs, labels, reduction='none')
+                highest, indices = torch.topk(losses, min(k, len(labels)), largest=True)
+                top_losses.extend(zip(highest, images[indices]))
+        top_losses.sort(key=lambda x: x[0], reverse=True)
+
+        return list(map(lambda x: x[1], top_losses[:k]))
