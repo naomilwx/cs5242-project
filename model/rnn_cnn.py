@@ -69,7 +69,7 @@ class CNNWithRNN(nn.Module):
     def forward(self, x):
         feat = self.features(x)
         out = self.rnn.forward(feat)
-        out = self.aap(out)
+        # out = self.aap(out)
         out = out.view(out.size(0), -1)
         out = self.classifier(out)
 
