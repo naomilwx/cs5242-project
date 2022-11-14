@@ -144,3 +144,9 @@ class Trainer:
         top_losses.sort(key=lambda x: x[0], reverse=True)
 
         return list(map(lambda x: x[1], top_losses[:k]))
+
+    def save_model(self, save_path, model=None):
+        if model is None:
+            model = self.best_model if self.best_model is not None else self.model
+        
+        torch.save(model, save_path)
