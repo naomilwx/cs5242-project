@@ -7,7 +7,7 @@ from torchvision import transforms
 from utils.device_utils import get_device
 
 class Trainer:
-    def __init__(self, model, optimizer, criterion, dataset, batch_size, split=[0.7, 0.1, 0.2], seed=42, crop=0.9, random_transform=True):
+    def __init__(self, model, optimizer, criterion, dataset, batch_size, split=[0.7, 0.1, 0.2], seed=42, crop=0.9, random_transform=False):
         self.model = model
         self.optimizer = optimizer
         self.criterion = criterion
