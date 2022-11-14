@@ -1,41 +1,19 @@
 import torch.nn as nn
+from model.conv_block import ConvBlock
 
 class BaselineCNN1(nn.Module):
     def __init__(self, num_classes):
         super(BaselineCNN1, self).__init__()
         
         self.features = nn.Sequential(
-            nn.Conv2d(3, 16, (3,3), 1, 1),
-            nn.ReLU(True),
-            nn.BatchNorm2d(16),
-            nn.Conv2d(16, 16, (3,3), 1, 1),
-            nn.ReLU(True),
-            nn.BatchNorm2d(16),
-            nn.MaxPool2d(2, 2),
-
-            nn.Conv2d(16, 32, (3,3), 1, 1),
-            nn.ReLU(True),
-            nn.BatchNorm2d(32),
-            nn.Conv2d(32, 32, (3,3), 1, 1),
-            nn.ReLU(True),
-            nn.BatchNorm2d(32),
-            nn.MaxPool2d(2, 2),
-
-            nn.Conv2d(32, 64, (3,3), 1, 1),
-            nn.ReLU(True),
-            nn.BatchNorm2d(64),
-            nn.Conv2d(64, 64, (3,3), 1, 1),
-            nn.ReLU(True),
-            nn.BatchNorm2d(64),
-            nn.MaxPool2d(2, 2),
-            
-            nn.Conv2d(64, 128, (3,3), 1, 1),
-            nn.ReLU(True),
-            nn.BatchNorm2d(128),
-            nn.Conv2d(128, 128, (3,3), 1, 1),
-            nn.ReLU(True),
-            nn.BatchNorm2d(128),
-            nn.MaxPool2d(2, 2)
+            ConvBlock(3, 16),
+            nn.MaxPool2d(kernel_size=2, stride=2),
+            ConvBlock(16, 32),
+            nn.MaxPool2d(kernel_size=2, stride=2),
+            ConvBlock(32, 64),
+            nn.MaxPool2d(kernel_size=2, stride=2),
+            ConvBlock(64, 128),
+            nn.MaxPool2d(kernel_size=2, stride=2),
         )
         
         self.aap = nn.AdaptiveAvgPool2d((1,1))
@@ -55,37 +33,14 @@ class CNNToMLP(nn.Module):
         super(CNNToMLP, self).__init__()
         
         self.features = nn.Sequential(
-            nn.Conv2d(3, 16, (3,3), 1, 1),
-            nn.ReLU(True),
-            nn.BatchNorm2d(16),
-            nn.Conv2d(16, 16, (3,3), 1, 1),
-            nn.ReLU(True),
-            nn.BatchNorm2d(16),
-            nn.MaxPool2d(2, 2),
-
-            nn.Conv2d(16, 32, (3,3), 1, 1),
-            nn.ReLU(True),
-            nn.BatchNorm2d(32),
-            nn.Conv2d(32, 32, (3,3), 1, 1),
-            nn.ReLU(True),
-            nn.BatchNorm2d(32),
-            nn.MaxPool2d(2, 2),
-
-            nn.Conv2d(32, 64, (3,3), 1, 1),
-            nn.ReLU(True),
-            nn.BatchNorm2d(64),
-            nn.Conv2d(64, 64, (3,3), 1, 1),
-            nn.ReLU(True),
-            nn.BatchNorm2d(64),
-            nn.MaxPool2d(2, 2),
-            
-            nn.Conv2d(64, 128, (3,3), 1, 1),
-            nn.ReLU(True),
-            nn.BatchNorm2d(128),
-            nn.Conv2d(128, 128, (3,3), 1, 1),
-            nn.ReLU(True),
-            nn.BatchNorm2d(128),
-            nn.MaxPool2d(2, 2)
+            ConvBlock(3, 16),
+            nn.MaxPool2d(kernel_size=2, stride=2),
+            ConvBlock(16, 32),
+            nn.MaxPool2d(kernel_size=2, stride=2),
+            ConvBlock(32, 64),
+            nn.MaxPool2d(kernel_size=2, stride=2),
+            ConvBlock(64, 128),
+            nn.MaxPool2d(kernel_size=2, stride=2),
         )
         
         self.aap = nn.AdaptiveAvgPool2d((1,1))
