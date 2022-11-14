@@ -2,7 +2,7 @@ import torch
 import torch.nn as nn
 
 from model.attention import AttentionBlock, AttentionConv
-from model.baseline_cnn_2 import Block
+from model.residual_cnn import Block
 
 class CNNWithAttention(nn.Module):
     def __init__(self, num_classes):

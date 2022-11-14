@@ -1,7 +1,7 @@
 import torch
 import torch.nn as nn
 
-from model.baseline_cnn_2 import Block
+from model.residual_cnn import Block
 
 class ResidualCNN(nn.Module):
 
