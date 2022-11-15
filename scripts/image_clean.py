@@ -110,7 +110,9 @@ def get_duplicate_pairs(images):
 
     return dups
 
-def remove_background(data_dir, out_dir, target_folders):
+def remove_background(data_dir, out_dir, target_folders=None):
+    if target_folders is None:
+        target_folders = os.listdir(data_dir)
     for folder in target_folders:
         if folder.startswith('.'):
             continue

@@ -30,7 +30,6 @@ class DeeperCNN(nn.Module):
         out = self.classifier(out)
         return out
 
-
 class DeeperCNNWide(nn.Module):
     def __init__(self, num_classes):
         super(DeeperCNNWide, self).__init__()
@@ -59,10 +58,9 @@ class DeeperCNNWide(nn.Module):
         out = self.classifier(out)
         return out
 
-
-class DeeperCNN2(nn.Module):
+class DeeperCNNBNFirst(nn.Module):
     def __init__(self, num_classes):
-        super(DeeperCNN2, self).__init__()
+        super(DeeperCNNBNFirst, self).__init__()
         
         self.features = nn.Sequential(
             ConvBlock2(3, 16),
