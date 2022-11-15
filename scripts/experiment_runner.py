@@ -36,7 +36,7 @@ class ExperimentRunner:
                 criterion = nn.CrossEntropyLoss()
                 optimizer = torch.optim.Adam(model.parameters(), lr=param.lr, weight_decay=param.reg)
 
-                mtrainer = Trainer(model, optimizer, criterion, data, param.batch_size, crop=1, random_transform=param.transform)
+                mtrainer = Trainer(model, optimizer, criterion, data, param.batch_size, crop=1, random_transform=param.random_transform)
         
                 mtrainer.run_train(num_epochs)
 
