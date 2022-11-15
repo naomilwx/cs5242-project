@@ -1,5 +1,7 @@
 import torch.nn as nn
 
+from model.conv_block import ConvBlock
+
 class Block(nn.Module):
     def __init__(self, in_channels, out_channels, depth=2):
         super(Block, self).__init__()
@@ -39,7 +41,7 @@ class ResidualCNN(nn.Module):
         super(ResidualCNN, self).__init__()
 
         self.features = nn.Sequential(
-            Block(3, 16),
+            ConvBlock(3, 16),
             nn.MaxPool2d(kernel_size=2, stride=2),
             Block(16, 32),
             nn.MaxPool2d(kernel_size=2, stride=2),
@@ -67,7 +69,7 @@ class DeeperResidualCNN(nn.Module):
         super(DeeperResidualCNN, self).__init__()
 
         self.features = nn.Sequential(
-            Block(3, 16),
+            ConvBlock(3, 16),
             nn.MaxPool2d(kernel_size=2, stride=2),
             Block(16, 32),
             nn.MaxPool2d(kernel_size=2, stride=2),
