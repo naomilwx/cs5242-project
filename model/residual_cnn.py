@@ -44,7 +44,6 @@ class ResidualCNN(nn.Module):
             Block(16, 32),
             nn.MaxPool2d(kernel_size=2, stride=2),
             Block(32, 64),
-            Block(64, 64),
             nn.MaxPool2d(kernel_size=2, stride=2),
             Block(64, 128),
             Block(128, 128),

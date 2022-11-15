@@ -1,5 +1,6 @@
 import torch
 import torch.nn as nn
+import numpy as np
 
 from model.trainer import Trainer
 
@@ -35,11 +36,12 @@ class ExperimentRunner:
                 criterion = nn.CrossEntropyLoss()
                 optimizer = torch.optim.Adam(model.parameters(), lr=param.lr, weight_decay=param.reg)
 
-                mtrainer = Trainer(model, optimizer, criterion, data, param.batch_size, crop=1, random_transform=False)
+                mtrainer = Trainer(model, optimizer, criterion, data, param.batch_size, crop=1, random_transform=param.transform)
         
                 mtrainer.run_train(num_epochs)
 
                 _, test_acc, _ = mtrainer.run_test(mtrainer.testloader, 3)
+                print(f"Accuracy: {test_acc}")
 
                 _, test_acc_last, _ = mtrainer.run_test(mtrainer.testloader, model=mtrainer.model)
 
@@ -48,14 +50,18 @@ class ExperimentRunner:
         return self.results
         
     def result_summary(self):
-        results = []
-
+        results = {}
+        std = {}
         for k, v in self.results.items():
             results[k] = {
-                'best': sum(v['best'])/len(v['best']),
-                'last': sum(v['last'])/len(v['last'])
+                'best': np.mean(v['best']),
+                'last': np.mean(v['last'])
+            }
+            std[k] = {
+                'best': np.std(v['best']),
+                'last': np.std(v['last'])
             }
 
-        return results
+        return results, std
 
                 

@@ -4,7 +4,7 @@ from model.conv_block import ConvBlock
 class BaselineCNN1(nn.Module):
     def __init__(self, num_classes):
         super(BaselineCNN1, self).__init__()
-        
+
         self.features = nn.Sequential(
             ConvBlock(3, 16),
             nn.MaxPool2d(kernel_size=2, stride=2),
