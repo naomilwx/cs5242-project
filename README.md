@@ -3,14 +3,14 @@ The notebooks documenting the data collection, data processing and models are in
 1. [Data Collection](notebooks/01_Data_Collection.ipynb)
 1. [Data Exploration and Processing](02_DataExploration_PreProcessing.ipynb)
 1. [Baseline CNN and Improvements](03_Baseline_CNN_Model_and_Improvements.ipynb)
-  1. Baseline model
-  1. Improvements to baseline model
-  1. Residual models
+    1. Baseline model
+    1. Improvements to baseline model
+    1. Residual models
 1. [Exploration of Other Networks](04_Product_Classification_Other_Networks.ipynb)
-  1. RNN+CNN model
-  1. CNN+Attention models
-     1. Local attention
-     1. Convolution self attention
+    1. RNN+CNN model
+    1. CNN+Attention models
+        1. Local attention
+        1. Convolution self attention
 
 # Data
 The data used to train the model can be downloaded [here](https://drive.google.com/drive/folders/1uqZkgFSJA2R8oVQZQtdou54A0no3g7Nj) 
