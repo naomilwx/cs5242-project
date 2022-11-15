@@ -1,4 +1,10 @@
-from shopee_crawler.toolkit import crawl_by_cat_url
+try:
+    from shopee_crawler.toolkit import crawl_by_cat_url
+except ImportError as e:
+    print('shopee_crawler is not installed')
+except Exception as e:
+    print(e)
+
 import time
 import os
 import json
