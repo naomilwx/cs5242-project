@@ -3,7 +3,7 @@ The notebooks documenting the data collection, data processing and models are in
 1. [Data Collection](notebooks/01_Data_Collection.ipynb) (Naomi)
 1. [Data Exploration and Processing](notebooks/02_DataExploration_PreProcessing.ipynb) (Yi Xin)
    1. Data Explofation (Yi Xin)
-   1. Data Clean Preprocessing
+   1. Data Preprocessing
        1. Background Removal (Naomi)
        1. Data selection (all)
 1. [Baseline CNN and Improvements](notebooks/03_Baseline_CNN_Model_and_Improvements.ipynb) (Naomi)
