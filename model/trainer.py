@@ -139,11 +139,12 @@ class Trainer:
                 outputs = model(images)
 
                 losses = F.cross_entropy(outputs, labels, reduction='none')
+                _, predicted = torch.max(outputs.data, 1)
                 highest, indices = torch.topk(losses, min(k, len(labels)), largest=True)
-                top_losses.extend(zip(highest, images[indices]))
+                top_losses.extend(zip(highest, images[indices], labels[indices], predicted[indices]))
         top_losses.sort(key=lambda x: x[0], reverse=True)
 
-        return list(map(lambda x: x[1], top_losses[:k]))
+        return list(map(lambda x: x[1:], top_losses[:k]))
 
     def save_model(self, save_path, model=None):
         if model is None:

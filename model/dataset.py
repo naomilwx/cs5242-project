@@ -151,8 +151,9 @@ class DataSet(data.Dataset):
         img = transform(img)
         return img
 
-def display_preprocessed_image(img):
+def display_preprocessed_image(img, title=''):
     plt.figure()
+    plt.title(title)
     transform = transforms.Compose([
         transforms.Normalize(
             mean=[-0.485/0.229, -0.456/0.224, -0.406/0.225],
