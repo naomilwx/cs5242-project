@@ -13,7 +13,7 @@ The notebooks documenting the data collection, data processing and models are in
         1. Convolution self attention
 
 # Data
-The data used to train the model can be downloaded [here](https://drive.google.com/drive/folders/1uqZkgFSJA2R8oVQZQtdou54A0no3g7Nj) 
+The data used to train the model can be downloaded [here](https://drive.google.com/file/d/1RYb41Mv_mrc_OJFIGvVT_6aTwVV_xngu/view)
 
 # Dependencies
 python: 3.9
