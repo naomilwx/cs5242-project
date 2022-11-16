@@ -2,7 +2,7 @@
 The notebooks documenting the data collection, data processing and models are in the `notebook` folder.
 1. [Data Collection](notebooks/01_Data_Collection.ipynb) (Naomi)
 1. [Data Exploration and Processing](notebooks/02_DataExploration_PreProcessing.ipynb) (Yi Xin)
-   1. Data Explofation (Yi Xin)
+   1. Data Exploration (Yi Xin)
    1. Data Preprocessing
        1. Background Removal (Naomi)
        1. Data selection (all)
