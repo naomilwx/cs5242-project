@@ -36,7 +36,6 @@ class Block(nn.Module):
         return out + identity
 
 class ResidualCNN(nn.Module):
-
     def __init__(self, num_classes):
         super(ResidualCNN, self).__init__()
 

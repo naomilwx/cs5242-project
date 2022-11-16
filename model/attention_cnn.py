@@ -2,6 +2,7 @@ import torch
 import torch.nn as nn
 
 from model.attention import AttentionBlock, AttentionConv
+from model.conv_block import ConvBlock
 from model.residual_cnn import Block
 
 class CNNWithAttention(nn.Module):
@@ -69,7 +70,7 @@ class ResidualCNNWithAttention(nn.Module):
     def __init__(self, num_classes):
         super(ResidualCNNWithAttention, self).__init__()
         self.features1 = nn.Sequential(
-            Block(3, 16),
+            ConvBlock(3, 16),
             Block(16, 16),
             nn.MaxPool2d(2, 2),#112x112
 
