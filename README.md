@@ -1,12 +1,12 @@
 # Jupyter Notebooks
 The notebooks documenting the data collection, data processing and models are in the `notebook` folder.
 1. [Data Collection](notebooks/01_Data_Collection.ipynb)
-1. [Data Exploration and Processing](notebooks/02_DataExploration_PreProcessing.ipynb)
-1. [Baseline CNN and Improvements](notebooks/03_Baseline_CNN_Model_and_Improvements.ipynb)
+1. [Data Exploration and Processing](notebooks/02_DataExploration_PreProcessing.ipynb) (Tixin/Naomi)
+1. [Baseline CNN and Improvements](notebooks/03_Baseline_CNN_Model_and_Improvements.ipynb) (Naomi)
     1. Baseline model
     1. Improvements to baseline model
     1. Residual models
-1. [Exploration of Other Networks](notebooks/04_Product_Classification_Other_Networks.ipynb)
+1. [Exploration of Other Networks](notebooks/04_Product_Classification_Other_Networks.ipynb) (Shubhankar)
     1. RNN+CNN model
     1. CNN+Attention models
         1. Local attention
@@ -48,3 +48,6 @@ torch: >=1.12.1
 torchvision; 0.13.1
 
 tqdm
+
+# Project presentation slides
+The project presentation slides are available [here](https://docs.google.com/presentation/d/1b8Es7fiMq1eboXorrhPrG-Z0ZjGAQXvEiPhqHJn_nnA/edit?usp=sharing)
