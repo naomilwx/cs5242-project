@@ -19,19 +19,32 @@ The data used to train the model can be downloaded [here](https://drive.google.c
 python: 3.9
 ### Data analysis and processing
 scikit-image: 0.19.3
+
 scipy: 1.9.3
+
 opencv-python: 4.6.0.66
+
 torchvision; 0.13.1
+
 torchtext: 0.13.1
+
 imagehash: 4.2.1
+
 matplotlib: 3.6.0
+
 pandas: 1.4.3
+
 rembg
 
 ### Model training
 numpy: 1.23.4
+
 matplotlib: 3.6.0
+
 opencv-python: 4.6.0.66
+
 torch: >=1.12.1
+
 torchvision; 0.13.1
+
 tqdm
